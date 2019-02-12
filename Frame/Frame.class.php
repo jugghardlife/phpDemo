@@ -44,7 +44,6 @@ final class Frame{
 	{
 		//例如：./Home/View/Student/add.html
 		define("VIEW_PATH",APP_PATH."View".DS.CONTROLLER.DS);
-		echo VIEW_PATH;
 	}
 
 	private static function initAutoLoad()
@@ -53,8 +52,23 @@ final class Frame{
 			//将空间中的类名，转成真实的类文件路径
 			//空类中的类名：\Home\Controller\StudentController
 			//真实的类文件：./Home/Controller/StudentController.class.php
-			$filename=ROOT_PATH.str_replace("\\","",$className).".class.php";
-		})
+			$filename=ROOT_PATH.str_replace("\\",DS,$className).".class.php";
+			//如果类文件存在，则包含
+			if(file_exists($filename)) require_once($filename);
+		});
+	}
 
+	//私有的静态的请求分发：创建哪个控制器类的对象?调用控制器对象的哪个方法
+	private static function initDispatch()
+	{
+		//构造控制器类名：\Home\Controller\StudentController
+		$className="\\".PLAT."\\"."Controller"."\\".CONTROLLER."Controller";
+		//创建控制器类的对象
+		echo $className;
+		echo "</br>";
+		$controllerObj=new $className();
+		//调用控制器对象的方法
+		$actionName=ACTION;
+		$controllerObj->$actionName();//index()
 	}
 }
